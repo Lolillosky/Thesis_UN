@@ -1,0 +1,31 @@
+\chapter{Paper Review}
+\label{chap:Papers}
+
+\section{Deep Learning Profit and Loss}
+
+G. Bormetti, F. Cocco, P. Rossi, Deep learning profit and loss. Risk Magazine, Oct. 2021. \newline
+
+
+They tackle both pricing early exercise features and generation of PL distribution. As regressesor they use a neural network with 2 hidden layers and 10 neurons each. As activation function, they use a sigmoid activation. \\
+
+
+They use the same NN with 3 underlying assets (features) and 3 payoffs (labels). They use a different neural network for each time step. \\
+
+
+On each time step $t_j$, they draw a small number of trajectories $M$ for each main path from $t_j$ to $t_{t+1}$. For each of these trajectories they compute:\\
+
+$$\max\left(i^k\left(S^m(j,t_{j+1})\right),C^k_{t_{j+1}}\left(S^m(j,t_{j+1})\right)\right)$$ \\
+
+$i^k\left(S^m(j,t_{j+1})\right)$ is the exercise value of contract $k$, $C^k_{t_{j+1}}\left(S^m(j,t_{j+1})\right)$ is the continuation value for that same payoff and it is estimated with the neural network for $t_{j+1}$. \\
+
+They use $S(j,t_{j+1})$ as regressor and the average of the $M$ trajectories as labels. \\
+
+Interesting ideas: $M$ trajectories and using the NN for the next time step.
+What I do not like: interesting ideas not justified and not compared with other alternatives. Seems too academic.
+
+
+
+
+
+
+

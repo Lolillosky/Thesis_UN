@@ -1,0 +1,99 @@
+\documentclass[11pt,a4paper]{book}
+\def\nousafuentes{\null}
+\def\nodedicatoria{\null}
+\newcommand{\idiomadelatesis}[1]{\def\Ambitoidioma{#1}}
+\newcommand{\nombrecompletodoctorando}[1]{\def\NombreTesista{#1}}
+\newcommand{\titulodelatesis}[1]{\def\TituloTesis{#1}}
+\newcommand{\nombrecompletodirector}[1]{\def\NombreDirector{#1}}
+\newcommand{\nombrecompletocodirector}[1]{\def\NombreDirectorB{#1}}
+\newcommand{\fechadelectura}[1]{\def\Fecha{#1}}
+\RequirePackage{ifthen}
+\newcommand{\dosdirectores}[1]{\ifthenelse{\equal{#1}{si}}{\def\Ambito{dosdir}}{\def\Ambito{undir}}}
+\newcommand{\doctoradointernacional}[1]{\ifthenelse{\equal{#1}{si}}{\def\dint{si}}{\def\dint{no}}}
+\newcommand{\sexodoctorando}[1]{\ifthenelse{\equal{#1}{mujer}}{\def\SexoTesista{a}}{\def\SexoTesista{\null}}}
+\newcommand{\sexodeldirector}[1]{\ifthenelse{\equal{#1}{mujer}}{\def\SexoDirector{a}}{\def\SexoDirector{\null}}}
+\newcommand{\sexodelcodirector}[1]{\ifthenelse{\equal{#1}{mujer}}{\def\SexoDirectorB{a}}{\def\SexoDirectorB{\null}}}
+\newcommand{\nombreprograma}[1]{\ifthenelse{\equal{\Ambitoidioma}{english}}{\ifthenelse{\equal{#1}{sc}}{\def\PD{Complex Systems}}{\def\PD{Natural and Applied Sciences}}}{\ifthenelse{\equal{#1}{sc}}{\def\PD{Sistemas Complejos}}{\def\PD{Ciencias Naturales y Aplicadas}}}}
+\input{datospersonales}
+\RequirePackage{polyglossia}
+\ifthenelse{\equal{\Ambitoidioma}{english}}{\setmainlanguage{english}\setotherlanguages{spanish}}{\setmainlanguage{spanish}\setotherlanguages{english}}
+\RequirePackage{color}
+\RequirePackage{graphicx}
+\RequirePackage{ae}
+\RequirePackage{eurosym}
+\RequirePackage{lineno}
+\RequirePackage{fancyhdr}
+\RequirePackage{ifpdf}
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{unicode-math}
+\RequirePackage{fontspec}
+\RequirePackage[square,comma,numbers,sort&compress]{natbib}
+\setlength\paperheight {297mm}%
+\setlength\paperwidth  {210mm}%
+\newcommand{\grc}{\ensuremath{^{\circ}}}
+
+\ifthenelse{\equal{\nousafuentes}{1}}{%
+%%%%% fuentes mas estandar (para la opcion sinfuentes ! )
+\setmainfont[Ligatures=TeX,SmallCapsFont={* Caps}, SlantedFont={* Slanted}]{Latin Modern Roman}
+\setmathfont{Latin Modern Math}%
+\setmonofont{Latin Modern Mono}%
+}{%
+%%%% fuentes estandar de uso
+\setmainfont{IwonaLight-Regular}[
+BoldFont = {Iwona-Bold},
+ItalicFont = {IwonaLight-Italic},
+BoldItalicFont = {Iwona-Italic},
+SlantedFont={IwonaLight-Italic},
+BoldSlantedFont={IwonaBold-Italic},
+SmallCapsFont={Iwona},
+SmallCapsFeatures={Letters=SmallCaps},]
+\setmathfont{TeX Gyre Pagella Math}
+\setmonofont{Latin Modern Mono}%
+
+%%%% fuentes especiales
+\newfontfamily\fuentededicatoria{LobsterTwo}
+}
+
+\renewcommand{\baselinestretch}{1.2}
+\title{\TituloTesis}
+\author{\NombreTesista}
+\textwidth 170mm
+\topmargin -2cm
+\newcounter{catoa}
+\newcounter{prol}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+ 
+\pagestyle{empty}
+
+\hspace*{4.1cm}\begin{minipage}{5cm}
+\centerline{\fuentededicatoria\Huge\bfseries\ifthenelse{\equal{\Ambitoidioma}{english}}{Errata}{Fe de erratas}}
+\vspace{1mm}
+\centerline{(\ifthenelse{\equal{\Ambitoidioma}{english}}{Last updated: \today}{Actualizado: \today})}%\\[2mm]
+\vspace{2mm}
+\centerline{\LARGE\bf\TituloTesis}%\\[2mm]
+\vspace{2mm}
+\centerline{\NombreTesista}
+\end{minipage}
+
+\vspace{1cm}\hspace*{-2cm}\ifthenelse{\equal{\Ambitoidioma}{english}}{Reference format: Page~/~Paragraph~/~Line}{Formato: Página~/~Párrafo~/~Línea}
+
+\begin{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%
+%%%%%%		A partir de aquí es lo que hay que modificar según convenga
+%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\item[\bf 17/2/18] Bla, bla, bla
+
+\item[\bf 35/-/-] Section 2.4 heading should be ....
+
+\item[\bf 86/Eqn.~5.6] `$\sim$' should be ``$\approx$''
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%
+%%%%%%		Hasta aquí hay que modificar según convenga
+%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{itemize}
+\end{document}

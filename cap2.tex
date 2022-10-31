@@ -1,0 +1,49 @@
+%%% Se puede cambiar el nombre del primer capitulo:
+\chapter{Nombre del segundo capítulo}
+\graphicspath{{figuras/cap2/}}
+\label{cap:sistexp}
+
+Esto es el sistema experimental y ahora fijaos en la figura \ref{fig:patata2}:
+
+%%% primer argumento: label y nombre de fichero sin extension / segundo: ancho en cm / tercero: caption
+\figura{patata2}{6}{Figura en el capítulo \ref{cap:sistexp}}
+
+Aquí iría más texto \dots pero como no sé que escribir (?) cambio de página \dots
+
+\newpage
+
+\section{Sección}
+
+Pongamos una tabla\index{plantilla}:
+
+\begin{table}[!htp]
+\centering
+ \begin{tabular}{| r | r || c | c | c |}
+	\hline
+	1 & 2 & 3 & 4 & 5\\\hline
+        a & b & c & d & e\\
+        A & B & C & {\bf d} & E\\
+	\hline
+  \end{tabular}
+  \caption{Un pie de tabla normal}\label{tab:primera}
+\end{table}
+
+La tabla \ref{tab:primera} es un poco insulsa. Vamos a otra página
+
+\newpage
+
+\subsection*{Subsección}
+
+!`Atención en el asterisco en la definición de la subsección!
+
+\subsection*{Otra subsección}
+
+Esto es parecido a lo del capítulo \ref{cap:introd}, pero aquí veremos una fórmula:
+
+\[
+ x^{2}-x=x(x-1)
+\]
+
+\noindent\verb|Algunos formatos:|
+
+?`Hace calor? Estamos a 20\grc C. Es muy {\sl importante} la conductividad en el {\it campo} eléctrico~\cite{Eltsov2000}. {\scshape Hola, esto es mi Tesis}.
