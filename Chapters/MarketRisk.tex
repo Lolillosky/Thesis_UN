@@ -9,7 +9,7 @@
 
 \section{The Computational Burden of Market Risk Computations}
 
-\section{Market Risk as a Supervised Machine Learning Problem}
+\section{Market Risk as a Supervised Machine Learning Problem} {\label{sec:MktRisk_SML}}
 
 \section{Model Scores for Market Risk}
 
@@ -46,7 +46,7 @@ Where $r$ represents the risk free rate, $q_j$ the continuous dividend yield , $
 Taking into account \ref{eq:geom_brownianmotion}
 
 \begin{equation}\label{eq:geom_digital_distrib}
-\left(\prod_{j=1}^m\frac{S_{T}^{j}}{S_{0}^{j}}\right)^{\frac{1}{m}} &=\left(\prod_{j=1}^m\frac{S_{t}^{j}}{S_{0}^{j}}\right)^{\frac{1}{m}}\exp\left(\frac{1}{m} \sum_{j=1}^{m}\left(r-q_{j}-\frac{\sigma_{j}^{2}}{2}\right) \left(T-t\right)+\frac{1}{m} \sum_{j=1}^{m} \sigma_{j} \left(W_{T}^{j}-W_{t}^{j}\right)\right) 
+\left(\prod_{j=1}^m\frac{S_{T}^{j}}{S_{0}^{j}}\right)^{\frac{1}{m}} =\left(\prod_{j=1}^m\frac{S_{t}^{j}}{S_{0}^{j}}\right)^{\frac{1}{m}}\exp\left(\frac{1}{m} \sum_{j=1}^{m}\left(r-q_{j}-\frac{\sigma_{j}^{2}}{2}\right) \left(T-t\right)+\frac{1}{m} \sum_{j=1}^{m} \sigma_{j} \left(W_{T}^{j}-W_{t}^{j}\right)\right) 
 \end{equation}
 
 Notice that $G_T$, conditional on $S_t^1,\cdots,S_t^m$ is log-normally distributed with parameters:
@@ -63,7 +63,7 @@ Notice that $G_T$, conditional on $S_t^1,\cdots,S_t^m$ is log-normally distribut
 \end{aligned}
 \end{equation}
 
-Where $\eqdistr$ represents equal in distribution, $\mathcal{F}_t$ the market filtration as of time $t$,$\sigma$ is a column vector containing the volatilities of the different underlying assets, $C_W$ the covariance matrix of $W_T^1,\cdots,W_T^m$ and $\phi$ is a standard normal distributed random variable.
+Where $\eqdistr$ represents equal in distribution, $\mathcal{F}_t$ the market filtration as of time $t$, $\sigma$ is a column vector containing the volatilities of the different underlying assets, $C_W$ the covariance matrix of $W_T^1,\cdots,W_T^m$ and $\phi$ is a standard normal distributed random variable.
 
 \begin{equation} \label{eq:geom_digital_distrib_params2}
 \begin{aligned}
@@ -157,11 +157,23 @@ In order to apply market risk scenarios we make use of historical data for both 
 
 In the following figure we represent the $10$ days overlapping log returns of our historical data:
 
-\begin{figure}[h]
+\begin{figure}[h] 
 \centering
 \includegraphics[width=0.7\textwidth]{Figures/MarketRisk/histdata.png}
-\caption{Example of a parametric plot ($\sin (x), \cos(x), x$)}
+\caption{Distribution of $10$ days log returns of market data. Marginal distributions of the different risk factors are plotted in the diagonal. Pairwise distributions are plotted in off diagonal figures.}
+\label{fig:distrib_P}
 \end{figure}
+
+As we described in section \ref{sec:MktRisk_SML}, in order to train our supervised machine learning model, we will generate synthetic data distributed as the data in Figure \ref{fig:distrib_P}. In order to do so, we will fit a Gaussian Mixture model to the data using the implementation in \href{https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html}{Scikit Learn} with 5 degrees of freedom. The generation of synthetic data will be tackled in chapter \ref{chap:Synthetic}.
+
+\begin{figure}[h] 
+\centering
+\includegraphics[width=0.7\textwidth]{Figures/MarketRisk/GaussMixture.png}
+\caption{}
+\label{fig:distrib_P}
+\end{figure}
+
+
 
 
 \subsection{Hedged Portfolio Problem}

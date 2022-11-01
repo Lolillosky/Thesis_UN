@@ -185,7 +185,7 @@ SmallCapsFeatures={Letters=SmallCaps},]
 %%%%%%%%%%%%%%%%%%%%%%% 1 hoja anverso
 \pagenumbering{Roman}\pagestyle{empty}%
 \vspace*{-1.3cm}% (-3cm original)
-\begin{center}\includegraphics[width=12cm]{figuras/marca1negro}\end{center}\vspace*{0mm}
+\begin{center}\includegraphics[width=12cm]{Figures/marca1negro}\end{center}\vspace*{0mm}
 \begin{center}
 {\myfont\Huge\CIENCIAS}\\[42mm]%
 \end{center}%
@@ -201,7 +201,7 @@ SmallCapsFeatures={Letters=SmallCaps},]
 \vfil\eject%
 %\pagenumbering{Roman}\pagestyle{empty}%
 \vspace*{-15.5mm}%  (-20mm original)
-\begin{center}\includegraphics[width=7.8cm]{figuras/marca1negro}\end{center}\vspace*{-1mm}
+\begin{center}\includegraphics[width=7.8cm]{Figures/marca1negro}\end{center}\vspace*{-1mm}
 \begin{center}
 \ifthenelse{\equal{\Ambitoidioma}{english}}{{\myfont\LARGE\SCIENCE}\\[20mm]}{{\myfont\LARGE\CIENCIAS}\\[20mm]}%
 \end{center}%
