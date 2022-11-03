@@ -22,7 +22,7 @@
 
 \section{A Base Case Example}
 
-As a base case example we will use an option for which a closed form solution exists. This will allow us compare the results obtained by a supervised machine learning algorithm to those obtained by the closed form formula.
+As a base case example we consider an option for which a closed form solution exists. This allows us compare the results obtained by a supervised machine learning algorithm to those obtained by the closed form formula.
 
 In order to add both non linear features and the possibility of increasing the dimension of the problem, we will use a call option on the geometric mean of a basket.
 
@@ -35,7 +35,7 @@ In order to add both non linear features and the possibility of increasing the d
 
 Where $S_t^1,\ldots,S_t^m$ represent the prices of the underlying assets as of time t and $G_T$ represents the geometric mean of one plus the return of the different assets from time $0$ to time $T$. $T$ represents the option's payoff date.
 
-We will assume geometric Brownian motion dynamics for the different underlying assets under the risk neutral measure:
+We assume geometric Brownian motion dynamics for the different underlying assets under the risk neutral measure:
 
 \begin{equation}\label{eq:geom_brownianmotion}
 \frac{S_{T}^{j}}{S_{t}^{j}}=\exp\left(\left(r-q_{j}-\frac{\sigma_{j}^{2}}{2}\right) \left( T - t\right)+\sigma_{j} \left(W_{T}^{j}-W_{t}^{j}\right)\right)
@@ -110,14 +110,22 @@ Where $\phi$ represents a standard normal random variable and $N$ its cumulative
 
 
 \subsection{Unhedged Portfolio}
- In this section we will explore how the usage of machine learning techniques perform while trying to represent the payoff function in isolation. Nevertheless, we should keep in mind that it is common to perform market risk calculations for trading portfolios where exotics payoffs as the one introduced in the last section are hedged with vanilla instruments. This is the reason why in the next section we will tackle the hedged portfolio case. 
+ In this section we explore how the usage of machine learning techniques performs while trying to represent the payoff function in isolation. Nevertheless, we should keep in mind that it is common to perform market risk calculations for trading portfolios where exotics payoffs as the one introduced in the last section are hedged with vanilla instruments. This is the reason why in the next section we tackle the hedged portfolio case. 
  
- As payoff function we will use call option on the geometric mean of a basket with two underlying assets $\{A,B\}$. We will use the following product characteristics:
+ As payoff function we consider a call option on the geometric mean of a basket with two underlying assets $\{A,B\}$ with the following contract terms:
+ 
+ \luis{Include more underlyings}
+ 
+ \jorge{Test Jorge}
+ 
+ \johan{Test Johan}
  
 \begin{center}
 \begin{tabular}{||c | c||} 
  \hline
- Time to maturity $(T-t)$ & 3 years \\
+ Market risk horizon $(\Delta)$ & $10$ days \\ 
+ \hline
+ Time to maturity $(T-t-\Delta)$ & $3$ years \\
  \hline
  $S_0^A$ & $1.0$ \\
  \hline
@@ -128,7 +136,7 @@ Where $\phi$ represents a standard normal random variable and $N$ its cumulative
  \end{tabular}
 \end{center}
 
-And these are the values for market variables (model parameters):
+We assume the following values for market variables (model parameters) as the market risk base scenario:
 
 \begin{center}
 \begin{tabular}{||c | c||} 
@@ -152,19 +160,23 @@ And these are the values for market variables (model parameters):
 \end{tabular}
 \end{center}
 
-We will apply market risk scenarios to $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$.
-In order to apply market risk scenarios we make use of historical data for both the spot prices and the $1$ year implied at the money volatilities of BBVA and Santander from --- to --- \footnote{Source: Bloomberg}. We compute $10$ days log-normal overlapping returns from the historical data and apply these to our market risk variables $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$.
+We apply market risk scenarios to $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$.
+In order to apply market risk scenarios we make use of historical data for both the spot prices and the $1$ year implied at the money volatilities of BBVA and Santander from 2019-11-12 to 2021-10-11 (500 scenarios) \footnote{Source: Bloomberg}. We compute $10$ days log-normal overlapping returns from the historical data and apply these to our market risk variables $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$.
+
+\luis{Use US stocks instead? Johan opinion?}
 
 In the following figure we represent the $10$ days overlapping log returns of our historical data:
 
 \begin{figure}[h] 
 \centering
 \includegraphics[width=0.7\textwidth]{Figures/MarketRisk/histdata.png}
-\caption{Distribution of $10$ days log returns of market data. Marginal distributions of the different risk factors are plotted in the diagonal. Pairwise distributions are plotted in off diagonal figures.}
+\caption{Distribution of $10$ days log returns of market data. Marginal distributions of the different risk factors are plotted in the diagonal. Pairwise joint distributions are plotted in off diagonal figures.}
 \label{fig:distrib_P}
 \end{figure}
 
-As we described in section \ref{sec:MktRisk_SML}, in order to train our supervised machine learning model, we will generate synthetic data distributed as the data in Figure \ref{fig:distrib_P}. In order to do so, we will fit a Gaussian Mixture model to the data using the implementation in \href{https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html}{Scikit Learn} with 5 degrees of freedom. The generation of synthetic data will be tackled in chapter \ref{chap:Synthetic}.
+As we described in section \ref{sec:MktRisk_SML}, in order to train our supervised machine learning model, we generate synthetic data distributed as the data in Figure \ref{fig:distrib_P}. We sample $100000$ scenarios to train our models and $20000$ to cross-validate them. In order to do so, we  fit a Gaussian Mixture model to the data using the implementation in \href{https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html}{Scikit Learn} with 5 components. The generation of synthetic data will be tackled in chapter \ref{chap:Synthetic}.
+
+\luis{Comment a little bit more on why using the Gaussian Mixture}
 
 \begin{figure}[h] 
 \centering
@@ -172,6 +184,79 @@ As we described in section \ref{sec:MktRisk_SML}, in order to train our supervis
 \caption{}
 \label{fig:distrib_P}
 \end{figure}
+
+For each of these scenarios generated under the historical measure $\mathbb{P}$ that take us from $t$ (base scenario date) to $t+\Delta$, with $\Delta$ being the market risk horizon, we generate a single risk neutral scenario that takes us from $t-\Delta$ to $T$ (product maturity). These risk neutral scenarios are generated under \ref{eq:geom_brownianmotion}. 
+
+So that the features of our models will be comprised of:
+
+$$
+X^{(k)}=\left[\begin{array}{c}
+S_{t+\Delta}^{A,(k)} \\ \\
+S_{t+\Delta}^{B,(k)} \\ \\
+\sigma_{t+\Delta}^{A,(k)} \\ \\
+\sigma_{t+\Delta}^{B,(k)}
+\end{array}\right], \ \  k=1, \ldots, n
+$$
+
+Where $(k)$ represents the $k$-th example and $n$ the number of examples.
+
+With respect to the labels, these will be 
+
+$$
+y^{(k)}=\left[\begin{array}{l}
+\tilde{V}_{T}^{(k)} \\ \\
+\frac{\partial \tilde{V}_{T}^{(k)}}{\partial S_{t+\Delta}^{A,(k)}} \\ \\
+\frac{\partial \tilde{V}_{T}^{(k)}}{\partial S_{t+\Delta}^{B,(k)}} \\ \\
+\frac{\partial \tilde{V}_{T}^{(k)}}{\partial \sigma_{t+\Delta}^{A,(k)}} \\ \\
+\frac{\partial \tilde{V}_{T}^{(k)}}{\partial \sigma_{t+\Delta}^{B,(k)}}
+\end{array}\right],\ \ k=1, \ldots, n
+$$
+
+Where
+
+$$\tilde{V}_{T}^{(k)} := V_T\left(S_T^{A.(k)}, S_T^{B.(k)}\right)\exp\left(-r\left(T-t-\Delta\right)\right)$$
+
+$\frac{\partial \tilde{V}_{T}^{(k)}}{\partial S_{t+\Delta}^{A,(k)}},\  
+\frac{\partial \tilde{V}_{T}^{(k)}}{\partial S_{t+\Delta}^{B,(k)}},\ 
+\frac{\partial \tilde{V}_{T}^{(k)}}{\partial \sigma_{t+\Delta}^{A,(k)}},\ 
+\frac{\partial \tilde{V}_{T}^{(k)}}{\partial \sigma_{t+\Delta}^{B,(k)}}
+$ are path-wise derivatives computed with the help of algorithmic differentiation techniques. Notice that these are only taken into account under the differential deep learning approach.
+
+With respect to hyper-parameters related to the model architecture and its regularization, we use the following:
+
+\luis{Pathwise differentials have been computed using Tensorflow. Should it be metioned? Johan / Jorge opinion}
+
+\begin{center}
+\begin{tabular}{||l | c||} 
+ \hline
+ Differential machine learning regularization parameter & $\{0.0, 0.1, 0.5, 1.0, 10.0\}$ \\
+ \hline
+ Number of cells in each hidden layer  & $\{32, 64, 128\}$  \\
+ \hline
+ Number of hidden layers  & $\{1 ,2 ,4 ,6\}$  \\
+ \hline
+ \end{tabular}
+\end{center}
+
+
+Notice that when we are using a differential machine learning regularization parameter of 0.0, we are using a feed-forward neural network with dense layers. We consider every combination of hyper-parameters, so that we end up with $60$ different models. With respect to hyper-parameters more related to training and not on the model architecture and its regularization:
+
+\luis{In the FFNN, with no differential machine learning, we are not using regularization. Maybe I should include dropout layers. Nevertheless the implementation should be changed and try to generate sensitivities wrt inputs by algorithmic differentiation instead of doing the algorithmic differentiation / code transformation proposed in the paper.}
+
+\begin{center}
+\begin{tabular}{||l | c||} 
+ \hline
+ Number of epochs & $20$ \\
+ \hline
+ Mini batch size  & $32$  \\
+ \hline
+ Number of hidden layers  & $\{1 ,2 ,4 ,6\}$  \\
+ \hline
+ Optimizer &  Adam(learning rate = 0.001, $\beta_1=0.9$,$\beta_2=0.999$,$\epsilon=1e-7$ ) \\
+  \hline
+ \end{tabular}
+\end{center}
+
 
 
 
