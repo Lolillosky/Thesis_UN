@@ -114,11 +114,7 @@ Where $\phi$ represents a standard normal random variable and $N$ its cumulative
  
  As payoff function we consider a call option on the geometric mean of a basket with two underlying assets $\{A,B\}$ with the following contract terms:
  
- \luis{Include more underlyings}
- 
- \jorge{Test Jorge}
- 
- \johan{Test Johan}
+ \luis{Include more underlyings}  
  
 \begin{center}
 \begin{tabular}{||c | c||} 
@@ -165,24 +161,23 @@ In order to apply market risk scenarios we make use of historical data for both 
 
 \luis{Use US stocks instead? Johan opinion?}
 
-In the following figure we represent the $10$ days overlapping log returns of our historical data:
+In figure \ref{fig:distrib_P} we represent the $10$ days overlapping log returns of our historical data.
 
-\begin{figure}[h] 
+\begin{figure}[H] 
 \centering
-\includegraphics[width=0.7\textwidth]{Figures/MarketRisk/histdata.png}
+\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/histdata.png}
 \caption{Distribution of $10$ days log returns of market data. Marginal distributions of the different risk factors are plotted in the diagonal. Pairwise joint distributions are plotted in off diagonal figures.}
 \label{fig:distrib_P}
 \end{figure}
-
-As we described in section \ref{sec:MktRisk_SML}, in order to train our supervised machine learning model, we generate synthetic data distributed as the data in Figure \ref{fig:distrib_P}. We sample $100000$ scenarios to train our models and $20000$ to cross-validate them. In order to do so, we  fit a Gaussian Mixture model to the data using the implementation in \href{https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html}{Scikit Learn} with 5 components. The generation of synthetic data will be tackled in chapter \ref{chap:Synthetic}.
+As we described in section \ref{sec:MktRisk_SML}, in order to train our supervised machine learning model, we generate synthetic data distributed as the data in Figure \ref{fig:distrib_P}. We sample $100,000$ scenarios to train our models, $20,000$ to cross-validate them and $20,000$ scenarios to test the model that minimizes the score metric. We use the mean squared error as score metric. In order to do so, we  fit a Gaussian Mixture model to the data using the implementation in \href{https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html}{Scikit Learn} with 5 components. These scenarios are represented in figure \ref{fig:distrib_P_simul}. The generation of synthetic data will be tackled in chapter \ref{chap:Synthetic}.
 
 \luis{Comment a little bit more on why using the Gaussian Mixture}
 
-\begin{figure}[h] 
+\begin{figure}[H] 
 \centering
-\includegraphics[width=0.7\textwidth]{Figures/MarketRisk/GaussMixture.png}
+\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/GaussMixture.png}
 \caption{}
-\label{fig:distrib_P}
+\label{fig:distrib_P_simul}
 \end{figure}
 
 For each of these scenarios generated under the historical measure $\mathbb{P}$ that take us from $t$ (base scenario date) to $t+\Delta$, with $\Delta$ being the market risk horizon, we generate a single risk neutral scenario that takes us from $t-\Delta$ to $T$ (product maturity). These risk neutral scenarios are generated under \ref{eq:geom_brownianmotion}. 
@@ -226,6 +221,8 @@ With respect to hyper-parameters related to the model architecture and its regul
 
 \luis{Pathwise differentials have been computed using Tensorflow. Should it be metioned? Johan / Jorge opinion}
 
+\jorge{Sí me parece interesante, creo que le da valor. No veo por qué no}
+
 \begin{center}
 \begin{tabular}{||l | c||} 
  \hline
@@ -256,6 +253,36 @@ Notice that when we are using a differential machine learning regularization par
   \hline
  \end{tabular}
 \end{center}
+
+Since we have a closed form formula for our pricing function, we can easily compute the Bayes error\footnote{Lowest possible error} by calculating the mean squared error between $\tilde{V}_{T}$ (noisy data) and $V_{t+\Delta}$ (closed form formula):
+
+$$\textbf{Bayes error}:=\frac{1}{N_{CV}}\sum_{j\in CV}\left(\tilde{V}_{T}^{(k)}-V_{t+\Delta}^{(k)}\right)^2$$
+
+Obtaining a value of $0.109186$. $CV$ represents the set of cross validation examples, $N_{CV}$ the number of these and $V_{t+\Delta}^{(k)} := V\left(t+\Delta, S_{t+\Delta}^{A,(k)}
+,S_{t+\Delta}^{B,(k)}
+,\sigma_{t+\Delta}^{A,(k)}
+\sigma_{t+\Delta}^{B,(k)}\right)$.
+
+In figure \ref{fig:MSE_CV} we represent the mean squared error in the cross validation set of the different models together with the Bayes error. Notice that, as expected, the Bayes error is smaller that the errors produced by any of the models.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/MSE_CV.png}
+\caption{Mean squared error in the cross validation set of the different models together with the Bayes error (dotted line)}
+\label{fig:MSE_CV}
+\end{figure}
+
+
+\begin{figure}[H] 
+\centering
+\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/train_test_mse.png}
+\caption{Mean squared error in train and cross validation sets together with Bayes error}
+\label{fig:MSE_CV}
+\end{figure}
+
+\cite{SavineHuge2020}
+
+\cite{knuthwebsite}
 
 
 
