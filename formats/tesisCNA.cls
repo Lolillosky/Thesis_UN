@@ -53,7 +53,7 @@ linkcolor=NavyBlue,%
 urlcolor=NavyBlue%
 ]{hyperref}
 \RequirePackage{caption}
-\RequirePackage[square,comma,numbers,sort&compress]{natbib}
+% \RequirePackage[square,comma,numbers,sort&compress]{natbib}
 \setlength\paperheight {297mm}%
 \setlength\paperwidth  {210mm}%
 %\special{papersize=210mm,297mm}   %%%%% no se necesita con lualatex

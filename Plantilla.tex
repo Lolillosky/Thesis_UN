@@ -17,6 +17,8 @@
 \usepackage{hyperref}
 \usepackage{parskip}
 \usepackage{float} 
+\usepackage{biblatex} 
+\addbibresource{Bibliography/MyBib.bib} 
 
 \begin{document}
 %% epígrafe OPCIONAL -> si no se desea, comentar la siguiente linea
@@ -82,11 +84,14 @@
 %%% terminan apéndices
 
 %%%% BIBLIOGRAFÍA (se puede cambiar el estilo ... no se da soporte en ese caso...)
-\bibliographystyle{formats/cna}
-\phantomsection
-\addcontentsline{toc}{chapter}{\bibname}%
+% \bibliographystyle{formats/cna} CHANGE LUIS
+% \phantomsection CHANGE LUIS
+% \addcontentsline{toc}{chapter}{\bibname}% CHANGE LUIS
 %% La bibliografía está en Plantilla.bib. Se recomienda usar un gestor de bibliografía ( p.ej. JABREF )
-\bibliography{formats/Plantilla}
+% \bibliography{formats/Plantilla} CHANGE LUIS
+
+\printbibliography %CHANGE LUIS
+
 \cleardoublepage 
 
 %%% ÍNDICE ALFABÉTICO
