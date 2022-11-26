@@ -24,7 +24,7 @@
 
 As a base case example we consider an option for which a closed form solution exists. This allows us compare the results obtained by a supervised machine learning algorithm to those obtained by the closed form formula.
 
-In order to add both non linear features and the possibility of increasing the dimension of the problem, we will use a call option on the geometric mean of a basket.
+In order to add both nonlinear features and the possibility of increasing the dimension of the problem, we will use a call option on the geometric mean of a basket.
 
 \begin{equation}\label{eq:geom_digital}
 \begin{aligned}
@@ -35,13 +35,14 @@ In order to add both non linear features and the possibility of increasing the d
 
 Where $S_t^1,\ldots,S_t^m$ represent the prices of the underlying assets as of time t and $G_T$ represents the geometric mean of one plus the return of the different assets from time $0$ to time $T$. $T$ represents the option's payoff date.
 
-We assume geometric Brownian motion dynamics for the different underlying assets under the risk neutral measure:
+We assume geometric Brownian motion dynamics \johan{Entiendo que esto no será la primera vez que aparezcan ecuaciones similares de finanzas matemáticas. La primera vez habría que citar alguna referencia.} for the different underlying assets under the risk neutral measure:
 
 \begin{equation}\label{eq:geom_brownianmotion}
 \frac{S_{T}^{j}}{S_{t}^{j}}=\exp\left(\left(r-q_{j}-\frac{\sigma_{j}^{2}}{2}\right) \left( T - t\right)+\sigma_{j} \left(W_{T}^{j}-W_{t}^{j}\right)\right)
 \end{equation}
 
 Where $r$ represents the risk free rate, $q_j$ the continuous dividend yield , $\sigma_j$ the volatility and $W_T^j$ the change experienced form $0$ to $T$ of a Brownian motion. The $j$ index help us distinguish the parameters of the different underlying assets.
+\johan{Un par de tonterías, pero comentar que $r$ y las $q_j$ se asumen constantes? Y aunque se introduce la matriz de correlaciones abajo, quizás estaría bien comentar aquí que los $W_t^j$ son correlados? Lo segundo lo digo porque abajo dice "Notice that..." y para notar eso faltaría ese dato, aunque supongo que si no se dice nada por defecto habrá que asumir una estructura general de correlación.}
 
 Taking into account \ref{eq:geom_brownianmotion}
 
@@ -62,8 +63,10 @@ Notice that $G_T$, conditional on $S_t^1,\cdots,S_t^m$ is log-normally distribut
 & \Sigma=\frac{1}{m}\sqrt{\sigma^{\top} C_{w} \sigma}
 \end{aligned}
 \end{equation}
+\johan{Errata en la ecuación para $\mu$: $T \mapsto (T-t)$}
 
 Where $\eqdistr$ represents equal in distribution, $\mathcal{F}_t$ the market filtration as of time $t$, $\sigma$ is a column vector containing the volatilities of the different underlying assets, $C_W$ the covariance matrix of $W_T^1,\cdots,W_T^m$ and $\phi$ is a standard normal distributed random variable.
+\johan{Va según gustos, pero conceptos matemáticos generales como $\eqdistr$, mover su definición al glosario?}
 
 \begin{equation} \label{eq:geom_digital_distrib_params2}
 \begin{aligned}
@@ -151,27 +154,30 @@ We assume the following values for market variables (model parameters) as the ma
  \hline
  $q_B$ & $0.0$ \\
  \hline
- $rho$ & $0.8$ \\
+ $\rho$ & $0.8$ \\
  \hline
 \end{tabular}
 \end{center}
 
 We apply market risk scenarios to $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$.
-In order to apply market risk scenarios we make use of historical data for both the spot prices and the $1$ year implied at the money volatilities of BBVA and Santander from 2019-11-12 to 2021-10-11 (500 scenarios) \footnote{Source: Bloomberg}. We compute $10$ days log-normal overlapping returns from the historical data and apply these to our market risk variables $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$.
+In order to apply market risk scenarios we make use of historical data for both the spot prices and the $1$ year \johan{Not very important since this is an example, but mention why 1 year vol instead of 3 year vol?} implied at the money volatilities of BBVA and Santander from 2019-11-12 to 2021-10-11 (500 scenarios) \footnote{Source: Bloomberg}. We compute $10$ days log-normal overlapping returns from the historical data and apply these to our market risk variables $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$.
 
 \luis{Use US stocks instead? Johan opinion?}
+\johan{Could be interesting to include a case of less correlated stocks in the basket.}
 
 In figure \ref{fig:distrib_P} we represent the $10$ days overlapping log returns of our historical data.
 
 \begin{figure}[H] 
 \centering
-\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/histdata.png}
+\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/histdata.pdf}
 \caption{Distribution of $10$ days log returns of market data. Marginal distributions of the different risk factors are plotted in the diagonal. Pairwise joint distributions are plotted in off diagonal figures.}
 \label{fig:distrib_P}
 \end{figure}
+
 As we described in section \ref{sec:MktRisk_SML}, in order to train our supervised machine learning model, we generate synthetic data distributed as the data in Figure \ref{fig:distrib_P}. We sample $100,000$ scenarios to train our models, $20,000$ to cross-validate them and $20,000$ scenarios to test the model that minimizes the score metric. We use the mean squared error as score metric. In order to do so, we  fit a Gaussian Mixture model to the data using the implementation in \href{https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html}{Scikit Learn} with 5 components. These scenarios are represented in figure \ref{fig:distrib_P_simul}. The generation of synthetic data will be tackled in chapter \ref{chap:Synthetic}.
 
 \luis{Comment a little bit more on why using the Gaussian Mixture}
+\johan{This is very interesting! Maybe it fits somewhere else in the thesis, but it would also be very interesting to compare the results of what would be obtained if synthetic data were not used, and the model instead be trained (if possible) directly on the historical data.}
 
 \begin{figure}[H] 
 \centering
@@ -179,8 +185,10 @@ As we described in section \ref{sec:MktRisk_SML}, in order to train our supervis
 \caption{}
 \label{fig:distrib_P_simul}
 \end{figure}
+\johan{Entiendo que está pendiente, pero faltaría descripción de la figura.}
 
 For each of these scenarios generated under the historical measure $\mathbb{P}$ that take us from $t$ (base scenario date) to $t+\Delta$, with $\Delta$ being the market risk horizon, we generate a single risk neutral scenario that takes us from $t-\Delta$ to $T$ (product maturity). These risk neutral scenarios are generated under \ref{eq:geom_brownianmotion}. 
+\johan{No entiendo porqué los escenarios risk neutral van desde $t-\Delta$. Pensaría que o bien se asume que el tiempo no evoluciona, en el cálculo de riesgo de mercado, en cuyo caso el pricing va basado en evolución desde $t$ hasta $T$, bien se asume que evoluciona, y en tal caso el escenario base va desde $t$, mientras que los escenarios simulados van desde $t+\Delta$.}
 
 So that the features of our models will be comprised of:
 
@@ -254,7 +262,10 @@ Notice that when we are using a differential machine learning regularization par
  \end{tabular}
 \end{center}
 
+\johan{Any comment on how we do not expect the results to be sensitive to the fixed parameters?}
+
 Since we have a closed form formula for our pricing function, we can easily compute the Bayes error\footnote{Lowest possible error} by calculating the mean squared error between $\tilde{V}_{T}$ (noisy data) and $V_{t+\Delta}$ (closed form formula):
+\johan{Te preguntaré sobre esto la próxima vez que hablamos porque no entiendo como defines el noisy data... lo mismo no estoy entendiendo bien el problema, pero porqué el error no es cero, por definición, si se usa la fórmula analítica?}
 
 $$\textbf{Bayes error}:=\frac{1}{N_{CV}}\sum_{j\in CV}\left(\tilde{V}_{T}^{(k)}-V_{t+\Delta}^{(k)}\right)^2$$
 
@@ -265,9 +276,12 @@ Obtaining a value of $0.109186$. $CV$ represents the set of cross validation exa
 
 In figure \ref{fig:MSE_CV} we represent the mean squared error in the cross validation set of the different models together with the Bayes error. Notice that, as expected, the Bayes error is smaller that the errors produced by any of the models.
 
+\johan{It is not easy to distinguish the different models. Is the best model with $\alpha = 1.0$ 2 hidden layers, 32 cells, or 6 hidden layers 128 cells? Maybe a higher res figure with different type of lines to distinguish similar colors?}
+\johan{There is not a dramatic improvement when introducing the differentials... is this because the data set is (synthetically) very large? Or is it because the pricing function is effectively one-dimensional?}
+
 \begin{figure}[H] 
 \centering
-\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/MSE_CV.png}
+\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/MSE_CV.pdf}
 \caption{Mean squared error in the cross validation set of the different models together with the Bayes error (dotted line)}
 \label{fig:MSE_CV}
 \end{figure}
@@ -275,7 +289,7 @@ In figure \ref{fig:MSE_CV} we represent the mean squared error in the cross vali
 
 \begin{figure}[H] 
 \centering
-\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/train_test_mse.png}
+\includegraphics[width=1.0\textwidth]{Figures/MarketRisk/train_test_mse.pdf}
 \caption{Mean squared error in train and cross validation sets together with Bayes error}
 \label{fig:MSE_CV}
 \end{figure}
