@@ -1,6 +1,7 @@
 \chapter{Market Risk}
 \label{chap:MarketRisk}
 
+
 \section{Market Risk}
 
 
@@ -35,14 +36,17 @@ In order to add both nonlinear features and the possibility of increasing the di
 
 Where $S_t^1,\ldots,S_t^m$ represent the prices of the underlying assets as of time t and $G_T$ represents the geometric mean of one plus the return of the different assets from time $0$ to time $T$. $T$ represents the option's payoff date.
 
-We assume geometric Brownian motion dynamics \johan{Entiendo que esto no será la primera vez que aparezcan ecuaciones similares de finanzas matemáticas. La primera vez habría que citar alguna referencia.} \luis{Dejo en este punto de la t\'esis la referencia. Si hubiera ecuaciones de este tipo antes, mover\'ia dicha referencia.} for the different underlying assets under the risk neutral measure \footnote{A good reference regarding stochastic calculus applied to quentitative finance and derivatives pricing theory can be found here \cite{Borj}}:
+We assume geometric Brownian motion dynamics \johan{Entiendo que esto no será la primera vez que aparezcan ecuaciones similares de finanzas matemáticas. La primera vez habría que citar alguna referencia.} \luis{Dejo en este punto de la t\'esis la referencia. Si hubiera ecuaciones de este tipo antes, mover\'ia dicha referencia.} \jorge{Correcto} \johan{ok!} for the different underlying assets under the risk neutral measure \footnote{A good reference regarding stochastic calculus applied to quentitative finance and derivatives pricing theory can be found here \cite{Borj}}:
 
 \begin{equation}\label{eq:geom_brownianmotion}
 \frac{S_{T}^{j}}{S_{t}^{j}}=\exp\left(\left(r-q_{j}-\frac{\sigma_{j}^{2}}{2}\right) \left( T - t\right)+\sigma_{j} \left(W_{T}^{j}-W_{t}^{j}\right)\right)
 \end{equation}
 
 Where $r$ represents the risk free rate, $q_j$ the continuous dividend yield , $\sigma_j$ the volatility and $W_T^j$ the change experienced form $0$ to $T$ of a Brownian motion. The $j$ index help us distinguish the parameters of the different underlying assets.
-\johan{Un par de tonterías, pero comentar que $r$ y las $q_j$ se asumen constantes? Y aunque se introduce la matriz de correlaciones abajo, quizás estaría bien comentar aquí que los $W_t^j$ son correlados? Lo segundo lo digo porque abajo dice "Notice that..." y para notar eso faltaría ese dato, aunque supongo que si no se dice nada por defecto habrá que asumir una estructura general de correlación.}\luis{Incluyo el siguiente texto como respuesta a tu sugerencia} We are assuming constant interest rates, dividends and volatilities. The different Brownian processes will be correlated with time independent correlations. Although these assumptions are simplistic from a pricing perspective, we make them for the base case example to have a simple closed form formula. We should also keep in mind that machine learning techniques perform well when the number of features increase, so that these techniques can be extended to more complex pricing frameworks. 
+\johan{Un par de tonterías, pero comentar que $r$ y las $q_j$ se asumen constantes? Y aunque se introduce la matriz de correlaciones abajo, quizás estaría bien comentar aquí que los $W_t^j$ son correlados? Lo segundo lo digo porque abajo dice "Notice that..." y para notar eso faltaría ese dato, aunque supongo que si no se dice nada por defecto habrá que asumir una estructura general de correlación.}\luis{Incluyo el siguiente texto como respuesta a tu sugerencia}\johan{ok!} We are assuming constant interest rates, dividends and volatilities. The different Brownian processes will be correlated with time independent correlations.  \st{Although these assumptions are simplistic from a pricing perspective, we make them for the base case example to have a simple closed form formula} \jorge{Creo que puede quitarse y continuar con We should...}\johan{Creo también que queda bien quitarlo.} We should also keep in mind that machine learning techniques perform well when the number of features increase, so that these techniques can be extended to more complex pricing frameworks. 
+
+
+
 
 Taking into account \ref{eq:geom_brownianmotion}
 
@@ -63,10 +67,10 @@ Notice that $G_T$, conditional on $S_t^1,\cdots,S_t^m$ is log-normally distribut
 & \Sigma=\frac{1}{m}\sqrt{\sigma^{\top} C_{w} \sigma}
 \end{aligned}
 \end{equation}
-\johan{Errata en la ecuación para $\mu$: $T \mapsto (T-t)$}\luis{Corregida}
+\johan{Errata en la ecuación para $\mu$: $T \mapsto (T-t)$}\luis{Corregida} \jorge{$\checkmark$}
 
 Where $\mathcal{F}_t$ the market filtration as of time $t$, $\sigma$ is a column vector containing the volatilities of the different underlying assets, $C_W$ the covariance matrix of $W_T^1,\cdots,W_T^m$ and $\phi$ is a standard normal distributed random variable.
-\johan{Va según gustos, pero conceptos matemáticos generales como $\eqdistr$, mover su definición al glosario?}\luis{movido, de momento $\eqdistr$}
+\johan{Va según gustos, pero conceptos matemáticos generales como $\eqdistr$, mover su definición al glosario?}\luis{movido, de momento $\eqdistr$} \jorge{yo no soy muy partidario de incluir $\eqdistr$ pero no es nada relevante }
 
 \begin{equation} \label{eq:geom_digital_distrib_params2}
 \begin{aligned}
@@ -160,7 +164,7 @@ We assume the following values for market variables (model parameters) as the ma
 \end{center}
 
 We apply market risk scenarios to $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$.
-In order to apply market risk scenarios we make use of historical data for both the spot prices and the $1$ year \footnote{We are using the $1$ year implied volatility even though the product maturity is $3$ years due to better liquidity of the $1$ year maturity. In a real framework historical risk factors would be aligned with those used in pricing.} \johan{Not very important since this is an example, but mention why 1 year vol instead of 3 year vol?} \luis{Done as a footnote} implied at the money volatilities of BBVA and Santander from 2019-11-12 to 2021-10-11 (500 scenarios) \footnote{Source: Bloomberg}. We compute $10$ days log-normal overlapping returns from the historical data and apply these to our market risk variables $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$.
+In order to apply market risk scenarios we make use of historical data for both the spot prices and the $1$ year \footnote{We are using the $1$ year implied volatility even though the product maturity is $3$ years due to better liquidity of the $1$ year maturity. In a real framework historical risk factors would be aligned with those used in pricing.} \johan{Not very important since this is an example, but mention why 1 year vol instead of 3 year vol?} \luis{Done as a footnote}\johan{ok!} implied at the money volatilities of BBVA and Santander from 2019-11-12 to 2021-10-11 (500 scenarios) \footnote{Source: Bloomberg}. We compute $10$ days log-normal overlapping returns from the historical data and apply these to our market risk variables $S_t^A,\ S_t^B,\ \sigma_t^A,\ \sigma_t^B$. \jorge{$\checkmark$}
 
 \luis{Use US stocks instead? Johan opinion?}
 \johan{Could be interesting to include a case of less correlated stocks in the basket.}\luis{Pending}
@@ -176,7 +180,7 @@ In figure \ref{fig:distrib_P} we represent the $10$ days overlapping log returns
 
 As already mentioned in section \ref{sec:MktRisk_SML}, historical data is scarce, so that in order to train a machine learning model we have to generate synthetic data distributed as the historical shocks. The task of obtaining the distribution behind data is part of the unsupervised machine learning paradigm. Generation of synthetic market data will be covered in chapter \ref{chap:Synthetic} of this thesis. In this section we will use a Gaussian Mixture with $5$ components in order to reflect the fact that our data is not normally distributed \footnote{We use the implementation in \href{https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html}{Scikit Learn}}. We sample $100,000$ scenarios to train our models, $20,000$ to cross-validate them and $20,000$ scenarios to test the model that minimizes the score metric. We use the mean squared error as score metric.
 
-\johan{This is very interesting! Maybe it fits somewhere else in the thesis, but it would also be very interesting to compare the results of what would be obtained if synthetic data were not used, and the model instead be trained (if possible) directly on the historical data.}\luis{The thing is that historical data is scarce (just 500 scenarios). Further explanation wrt this to be included in section 2.4. For the time being I have included a little bit more regarding the usage of the Gaussian Mixture in the previous paragraph}
+\johan{This is very interesting! Maybe it fits somewhere else in the thesis, but it would also be very interesting to compare the results of what would be obtained if synthetic data were not used, and the model instead be trained (if possible) directly on the historical data.}\luis{The thing is that historical data is scarce (just 500 scenarios). Further explanation wrt this to be included in section 2.4. For the time being I have included a little bit more regarding the usage of the Gaussian Mixture in the previous paragraph} \jorge{$\checkmark$}\johan{ok!}
 
 \begin{figure}[H] 
 \centering
@@ -184,10 +188,10 @@ As already mentioned in section \ref{sec:MktRisk_SML}, historical data is scarce
 \caption{Marginal and joint distribution of both historical (blue) and synthetic shocks -simulated under the fitted Gaussian mixture model- (orange).}
 \label{fig:distrib_P_simul}
 \end{figure}
-\johan{Entiendo que está pendiente, pero faltaría descripción de la figura.}\luis{Resuelto}
+\johan{Entiendo que está pendiente, pero faltaría descripción de la figura.}\luis{Resuelto} \jorge{$\checkmark$}\johan{ok!}
 
 For each of these scenarios generated under the historical measure $\mathbb{P}$ that take us from $t$ (base scenario date) to $t+\Delta$, with $\Delta$ being the market risk horizon, we generate a single risk neutral scenario that takes us from $t+\Delta$ to $T$ (product maturity). These risk neutral scenarios are generated under \ref{eq:geom_brownianmotion}. 
-\johan{No entiendo porqué los escenarios risk neutral van desde $t-\Delta$. Pensaría que o bien se asume que el tiempo no evoluciona, en el cálculo de riesgo de mercado, en cuyo caso el pricing va basado en evolución desde $t$ hasta $T$, bien se asume que evoluciona, y en tal caso el escenario base va desde $t$, mientras que los escenarios simulados van desde $t+\Delta$.}\luis{Ten\'ia una errata. Los escenarios risk neutral van de $t+\Delta$ a $T$. Errata corregida.} 
+\johan{No entiendo porqué los escenarios risk neutral van desde $t-\Delta$. Pensaría que o bien se asume que el tiempo no evoluciona, en el cálculo de riesgo de mercado, en cuyo caso el pricing va basado en evolución desde $t$ hasta $T$, bien se asume que evoluciona, y en tal caso el escenario base va desde $t$, mientras que los escenarios simulados van desde $t+\Delta$.}\luis{Ten\'ia una errata. Los escenarios risk neutral van de $t+\Delta$ a $T$. Errata corregida.} \jorge{$\checkmark$}\johan{ok!}
 
 So that the features of our models will be comprised of:
 
@@ -228,7 +232,7 @@ With respect to hyper-parameters related to the model architecture and its regul
 
 \luis{Path-wise differentials have been computed using Tensorflow. Should it be mentioned? Johan / Jorge opinion}
 
-\jorge{Sí me parece interesante, creo que le da valor. No veo por qué no} \luis{Comentado en nota de pie de p\'agina}
+\jorge{Sí me parece interesante, creo que le da valor. No veo por qué no} \luis{Comentado en nota de pie de p\'agina} \jorge{$\checkmark$}\johan{ok!}
 
 \begin{center}
 \begin{tabular}{||l | c||} 
@@ -239,6 +243,11 @@ With respect to hyper-parameters related to the model architecture and its regul
  \hline
  Number of hidden layers  & $\{1 ,2 ,4 ,6\}$  \\
  \hline
+ Hidden layers activation function  & ReLU  \\
+ \hline
+ Output layer activation function  & Linear  \\
+ \hline
+ 
  \end{tabular}
 \end{center}
 
@@ -260,10 +269,10 @@ Notice that when we are using a differential machine learning regularization par
 \end{center}
 Both mini batch size and the optimizer hyper-parameters have been chosen in line with standard values. With respect to the number of epochs, its impact will be analyzed later. 
 
-\johan{Any comment on how we do not expect the results to be sensitive to the fixed parameters?}\luis{De momento he puesto el p\'arrafo anterior. Quiz\'as debiera dar revisar este punto m\'as adelante}
+\johan{Any comment on how we do not expect the results to be sensitive to the fixed parameters?}\luis{De momento he puesto el p\'arrafo anterior. Quiz\'as debiera dar revisar este punto m\'as adelante} \jorge{$\checkmark$}\johan{ok!}
 
 Since we have a closed form formula for our pricing function, we can easily compute the Bayes error\footnote{Lowest possible error} by calculating the mean squared error between $\tilde{V}_{T}$ (noisy data) and $V_{t+\Delta}$ (closed form formula):
-\johan{Te preguntaré sobre esto la próxima vez que hablamos porque no entiendo como defines el noisy data... lo mismo no estoy entendiendo bien el problema, pero porqué el error no es cero, por definición, si se usa la fórmula analítica?}\luis{Todo modelo de ML supervisado trata de generar $E\left[Y/X\right]$. Si $Y$ fuera la f\'ormula cerrada, o un MC convergido, esperar\'iamos que el error del modelo perfecto fuera cero. Aqu\'i, por aquello de evitar Montecarlo squared, cada escenario de riesgo de mercado tiene un \'unico escenario riesgo neutro, por ello es imposible llegar a un error 0. Es decir, condidionado a un escenario de riesgo de mercado, los flujos de caja riesgo neutro futuros representan dispersi\'on vs su valor medio. La idea es dar m\'as detalles sobre todo esto en secciones previas.}
+\johan{Te preguntaré sobre esto la próxima vez que hablamos porque no entiendo como defines el noisy data... lo mismo no estoy entendiendo bien el problema, pero porqué el error no es cero, por definición, si se usa la fórmula analítica?}\luis{Todo modelo de ML supervisado trata de generar $E\left[Y/X\right]$. Si $Y$ fuera la f\'ormula cerrada, o un MC convergido, esperar\'iamos que el error del modelo perfecto fuera cero. Aqu\'i, por aquello de evitar Montecarlo squared, cada escenario de riesgo de mercado tiene un \'unico escenario riesgo neutro, por ello es imposible llegar a un error 0. Es decir, condidionado a un escenario de riesgo de mercado, los flujos de caja riesgo neutro futuros representan dispersi\'on vs su valor medio. La idea es dar m\'as detalles sobre todo esto en secciones previas.} \jorge{$\checkmark$}\johan{ok!Gracias!}
 
 $$\textbf{Bayes error}:=\frac{1}{N_{CV}}\sum_{j\in CV}\left(\tilde{V}_{T}^{(k)}-V_{t+\Delta}^{(k)}\right)^2$$
 
@@ -277,7 +286,7 @@ In figure \ref{fig:MSE_CV} we represent the mean squared error in the cross vali
 \johan{It is not easy to distinguish the different models. Is the best model with $\alpha = 1.0$ 2 hidden layers, 32 cells, or 6 hidden layers 128 cells? Maybe a higher res figure with different type of lines to distinguish similar colors?}
 \johan{There is not a dramatic improvement when introducing the differentials... is this because the data set is (synthetically) very large? Or is it because the pricing function is effectively one-dimensional?}
 \luis{Con respecto a las figuras: las he cambiado a formato pdf. Las ten\'ia en png y la calidad era mucho peor. Tambi\'en el detalle de que el texto en las figuras tenga la misma fuente q la t\'esis. Con respecto a los colores: es cierto q en el momento en que se ponen varios gr\'aficos los colores se confunden. Por aquello de no volverme loco poniendo colores a mano, los resultados obtenidos por el mejor modelo}
-\luis{Con respecto a efecto de $\alpha$ incluyo m\'as comentarios.}
+\luis{Con respecto a efecto de $\alpha$ incluyo m\'as comentarios.} \jorge{$\checkmark$}\johan{ok!}
 
 \begin{figure}[H] 
 \centering
@@ -312,9 +321,6 @@ In figure \ref{fig:MSE_CV_train_test} we have plotted the mean shared error as a
 \end{itemize}
 
 
-
-
-
 \begin{figure}[H] 
 \centering
 \includegraphics[width=1.0\textwidth]{Figures/MarketRisk/train_test_mse.pdf}
@@ -322,11 +328,22 @@ In figure \ref{fig:MSE_CV_train_test} we have plotted the mean shared error as a
 \label{fig:MSE_CV_train_test}
 \end{figure}
 
-\cite{dirac}
+The approximation done by the neural network must meet accuracy tests from a regulatory standpoint. According to the Fundamental Review of the Trading Book \cite{FRTB} regulatory framework, banks must run a profit and loss attribution test (PLA tests) where the hypothetical P\&L\footnote{P\&L: profit and loss.} (HPL) must be compared with the risk theoretical P\&L (RTPL). The FRTB framework gives the following definition for both concepts:
 
-\cite{einstein}
+\begin{itemize}
+    \item HPL:  the daily P\&L produced by revaluing the positions held at the end of the
+previous day using the market data at the end of the current day. Commissions, fees, intraday
+trading and new/modified deals, valuation adjustments for which separate regulatory capital
+approaches have been otherwise specified as part of the rules and valuation adjustments which
+are deducted from CET1 are excluded from the HPL. Valuation adjustments updated daily should
+usually be included in the HPL. Time effects should be treated in a consistent manner in the HPL
+and risk-theoretical P\&L.
+\item RTPL: the daily desk-level P&L that is predicted by the valuation engines
+in the trading desk risk management model using all risk factors used in the trading desk risk
+management model (ie including the NMRFs\footnote{Non modellable risk factors}).
+\end{itemize}
 
-
+Hence, HPL should be computed with the pricing function used in revaluing the positions (Montecarlo for complex payoffs), whereas RTPL with the pricing simplification (supervised machine learning model). 
 
 
 
